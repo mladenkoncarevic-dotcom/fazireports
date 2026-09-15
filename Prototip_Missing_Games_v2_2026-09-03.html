@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Missing Games / Last Releases — prototip v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--red:#C90429;--bg:#EDEEEF;--ink:#14161A;--mute:#6B7076;--line:#D5D7DA;--card:#fff;
+--g4:#2f8f4a;--g3:#6fb57f;--g2:#a8d3b3;--g1:#d8ecdd;--r1:#f4c9cf;--amb:#E7A400;--navy:#20375f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Montserrat,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px}
+.wrap{max-width:1320px;margin:0 auto;padding:20px 18px 70px}
+.banner{background:#fff;border:1px solid var(--line);border-left:3px solid var(--red);padding:9px 13px;font-size:11.5px;color:var(--mute);margin-bottom:14px}
+.banner b{color:var(--ink)}
+h1{font-size:18px;font-weight:700;margin:0 0 2px}
+.sub{color:var(--mute);font-size:12px;margin:0 0 16px}
+.pbi{background:#fff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.modebar{display:flex;gap:0;border-bottom:1px solid var(--line)}
+.modebar .seg{display:flex;border-right:1px solid var(--line)}
+.modebar .seg .sl{font-size:8px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);font-weight:600;align-self:center;padding:0 8px 0 12px}
+.modebar button{font:inherit;font-size:11px;border:none;background:#fff;padding:9px 12px;cursor:pointer;color:var(--mute);border-bottom:2px solid transparent}
+.modebar button.on{color:var(--red);border-bottom-color:var(--red);font-weight:600}
+.modebar button:hover{background:#F7F7F8}
+.fbar{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end;padding:11px 14px;border-bottom:1px solid var(--line);background:#F7F7F8}
+.brand{font-weight:700;color:var(--red);font-size:15px;letter-spacing:.5px;margin-right:2px;align-self:center}
+.fld{display:flex;flex-direction:column;gap:3px}
+.fld label{font-size:8.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);font-weight:600}
+.fld select,.fld input{font:inherit;font-size:11px;border:1px solid var(--line);background:#fff;padding:5px 8px;min-width:110px;color:var(--ink)}
+.fld input{min-width:140px}
+.tgls{display:flex;gap:12px;align-items:center;margin-left:auto}
+.tgl{display:flex;align-items:center;gap:6px;font-size:10.5px;cursor:pointer;user-select:none}
+.tgl input{accent-color:var(--red);width:14px;height:14px}
+.btn{font:inherit;font-size:10.5px;border:1px solid var(--line);background:#fff;padding:6px 11px;cursor:pointer}
+.btn:hover{border-color:var(--red);color:var(--red)}
+.kpis{display:flex;border-bottom:1px solid var(--line)}
+.kpi{flex:1;padding:11px 14px;border-right:1px solid #EEE}.kpi:last-child{border-right:none}
+.kpi .v{font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:600;line-height:1}
+.kpi .l{font-size:8.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);margin-top:3px}
+.kpi .v.b{color:var(--red)}
+.scroll{overflow:auto;max-height:60vh}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:11px;font-family:"IBM Plex Mono",monospace}
+thead th{position:sticky;top:0;z-index:3;background:var(--navy);color:#fff;font-family:Montserrat,sans-serif;font-weight:600;font-size:8.5px;text-transform:uppercase;letter-spacing:.02em;padding:7px;text-align:right;white-space:nowrap;border-right:1px solid #2c4470}
+thead th.l{text-align:left}
+thead th.sortable{cursor:pointer}thead th.sortable:hover{background:#2c4470}
+thead th.act{background:#2c4470}thead th .ar{opacity:.5;font-size:8px}thead th.act .ar{opacity:1;color:#ffd23f}
+th.g{min-width:76px}th.g .d{display:block;font-weight:400;opacity:.7;font-size:7.5px;margin-top:1px}
+tbody td{padding:5px 7px;border-bottom:1px solid #EEE;border-right:1px solid #F3F3F3;text-align:right;white-space:nowrap}
+tbody td.l{text-align:left}
+tbody tr:hover td{filter:brightness(.985)}
+.rk{color:var(--mute);text-align:center;width:32px}
+.opn{font-family:Montserrat,sans-serif;font-weight:600;cursor:pointer}.opn:hover{color:var(--red)}
+.co,.am{font-family:Montserrat,sans-serif;color:#3B4046;font-size:10px}
+.mk{font-size:9.5px}
+.tag{display:inline-block;font-size:8px;padding:0 4px;border:1px solid;margin-left:4px}
+.tag.reg{color:var(--amb);border-color:var(--amb)}.tag.non{color:var(--g4);border-color:var(--g4)}
+.bar{display:inline-block;height:4px;background:var(--red);opacity:.7;vertical-align:middle;margin-left:6px;border-radius:2px}
+.cell{text-align:right;font-size:10px}
+.n0{background:var(--r1);color:var(--red);font-weight:600;text-align:center}
+.n1{background:var(--g1)}.n2{background:var(--g2)}.n3{background:var(--g3);color:#0e3d1e}.n4{background:var(--g4);color:#fff;font-weight:600}
+.nc{background:repeating-linear-gradient(45deg,#f0f0f0,#f0f0f0 4px,#e6e6e6 4px,#e6e6e6 8px);color:#9aa0a6;text-align:center;font-size:7.5px}
+.st-live{background:var(--g1);color:var(--g4);text-align:center;font-weight:600;font-size:9px}
+.st-no{background:var(--r1);color:var(--red);text-align:center;font-size:8.5px}
+.amrow td{background:#EEF0F3;font-family:Montserrat,sans-serif;font-weight:700;font-size:11px;cursor:pointer}
+.amrow .tw{display:inline-block;width:10px;color:var(--red);font-size:9px}
+.amrow.col .tw{transform:rotate(-90deg)}
+.legend{display:flex;gap:13px;flex-wrap:wrap;font-size:9.5px;color:var(--mute);padding:9px 14px;border-top:1px solid var(--line);align-items:center}
+.legend i{display:inline-block;width:15px;height:11px;margin-right:4px;vertical-align:middle;border:1px solid #ddd}
+.cta{background:rgba(201,4,41,.05);border-left:3px solid var(--red);padding:8px 12px;font-size:11.5px;margin-top:14px}
+.cta b{color:var(--red)}
+.q{background:#fff;border:1px solid var(--line);padding:12px 15px;margin-top:14px;font-size:11.5px}
+.q b{color:var(--ink)}.q ul{margin:6px 0 0;padding-left:18px}
+</style></head><body><div class="wrap">
+<div class="banner"><b>Prototip v2</b> — ugrađeni tvoji predlozi: brojevi u ćelijama (0 = crveno „nije puštena"), izbor skupa igara <b>Last releases ↔ Top 30</b>, i grupisanje po AM-u. Sve radi uživo; podaci su uzorak.</div>
+<h1>Missing Games / Last Releases <span style="font-size:10px;color:var(--mute);font-weight:400">· R11·03 (dorada) · Account Management</span></h1>
+<p class="sub">Kod kojih značajnih operatera igra još nije puštena — sortirano po veličini. Ćelija = bet/GGR igre kod operatera; 0 (crveno) = prilika.</p>
+
+<div class="pbi">
+  <div class="modebar">
+    <div class="seg"><span class="sl">Igre</span>
+      <button data-mode="last" class="on" id="mLast">Last releases (period)</button>
+      <button data-mode="top" id="mTop">Top 30 (po performansu)</button>
+      <button data-mode="custom" id="mCustom" title="izbor pojedinačnih igara (planirano)">Custom ▾</button>
+    </div>
+    <div class="seg"><span class="sl">Prikaz</span>
+      <button data-view="bet" class="on" id="vBet">Bet</button>
+      <button data-view="ggr" id="vGgr">GGR</button>
+      <button data-view="status" id="vStatus">Status (live/no)</button>
+    </div>
+    <div class="seg"><span class="sl">Grupisanje</span>
+      <button data-grp="flat" class="on" id="gFlat">Po značaju</button>
+      <button data-grp="am" id="gAm">Po AM-u</button>
+    </div>
+  </div>
+  <div class="fbar">
+    <span class="brand">fazi</span>
+    <div class="fld"><label>Period</label><select id="fPeriod"><option value="90">Last 90 days</option><option value="30">Last 30 days</option><option value="180">Last 6 months</option><option value="365">Last year</option></select></div>
+    <div class="fld"><label>Market</label><select id="fMarket"></select></div>
+    <div class="fld"><label>Account Manager</label><select id="fAM"></select></div>
+    <div class="fld"><label>Company</label><select id="fCompany"></select></div>
+    <div class="fld"><label>Pretraga operatera</label><input id="fSearch" placeholder="npr. 1xbet…"></div>
+    <div class="tgls">
+      <label class="tgl"><input type="checkbox" id="tReg" checked> isključi regulated</label>
+      <button class="btn" id="btnExport">⤓ CSV</button>
+      <button class="btn" id="btnReset">↺ Reset</button>
+    </div>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div class="scroll"><table id="tbl"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+  <div class="legend" id="legend"></div>
+</div>
+
+<div class="cta"><b>CTA:</b> „Kod kog značajnog operatera igra još nije puštena → AM šalje odmah." &nbsp;Crvene (0) ćelije kod visoko rangiranih operatera = akcija; velike zelene kod jednih + crvene kod sličnih = GAP.</div>
+
+<div class="q">
+<b>Otvorena pitanja za BI (ugrađena u spec):</b>
+<ul>
+<li><b>Pravilo 0:</b> da li 0 znači „nije puštena" ili „puštena bez skorije igre"? (BRAGG to razdvaja live/no gameplay) — treba definisati.</li>
+<li><b>Bet vs GGR</b> kao vrednost ćelije — ostavljen toggle; podrazumevano Bet (= mera značaja).</li>
+<li><b>Custom izbor igara</b> — treći mod (biraš pojedinačne igre), za sada placeholder.</li>
+</ul>
+</div>
+
+<script>
+function seeded(s){return()=>{s=(s*9301+49297)%233280;return s/233280;}}
+const rnd=seeded(20260904);
+const COMPANIES=["B2BAggregator","Tidal Holding - Soft2Bet B2C","Tidal Holding - Soft2Bet B2B","SoftSwiss - DAMA N.V.","Kanggiten B.V.","BtoBet","Goat Entertainment","Metaspins N.V.","Oryx gaming","Limited Liability SLOTS U.A.","Recomby B.V. - Nirex","MozzartBet"];
+const AMS=["Andjelija Kitanović","Nevena Stanković","Vuk Nešić","Maria Nascimento","Vukašin Stamenković","Nemanja Đokić"];
+const MARKETS=[["Curacao",false],["Mali",false],["Nigeria",false],["Ghana",false],["Kenya",false],["Serbia",true],["Brazil",true],["Bulgaria",true],["Croatia",true]];
+// Top-30 (performansne) igre + Last-90 (nove) igre
+const GAMES_TOP=["Bonus Epic Crown","Book Of Spells 2","Crown of Secret","Epic Clover 40","Epic Crown 10 Booster","Fruits and Stars","Fruits And Stars Christmas","Fruity Win 20","Fruity Win 40","Wild Hot 40"].map((n,i)=>({n,perf:(10-i)*8e6+rnd()*4e6,d:""}));
+const GAMES_LAST=[["Wild Hot 40 Blow B.","19 Avg",15],["Very Hot 5 Extreme","16 Avg",18],["Clovers And Diamonds 20","12 Avg",22],["Epic Dice 100 Booster","09 Avg",25],["Fortune of Wu Kong","05 Avg",29],["Golden Diamonds 10 Extr.","01 Avg",33],["Golden Diamonds 40 Extr.","28 Jul",37],["Bonus Epic Wild Extralines","03 Jul",62]].map(([n,d,days])=>({n,d,days,perf:rnd()*5e6}));
+const opNames=["1xbet1","Premierbetmali","casinia","MozzartBet","Millennium","Pinnup","Betking","mostbet","Melbet","Lemoncasino","VolcanoMe","888starz","Betwinner","Sportybet","1win","Betano","Parimatch","22bet","Helabet","Nairabet","Bangbet","Gal Sport"];
+const ALLGAMES=[...GAMES_TOP,...GAMES_LAST];
+const OPS=opNames.map((nm,i)=>{
+  const mk=MARKETS[Math.floor(rnd()*MARKETS.length)];
+  const bets=Math.max(0.2e6,Math.round((30-i*1.15+rnd()*4)*1e6*(0.5+rnd())));
+  const cells={};
+  ALLGAMES.forEach(g=>{
+    if(mk[1]&&rnd()<0.5){cells[g.n]={nc:true};return;}
+    const launched = ((bets/32e6)*0.8 - (g.days&&g.days<25?0.15:0) + rnd()*0.4) > 0.42;
+    const bet = launched ? Math.round(bets*(0.02+rnd()*0.12)*(0.6+ (g.perf||3e6)/8e6*0.4)) : 0;
+    cells[g.n]={bet, ggr:Math.round(bet*(0.05+rnd()*0.03))};
+  });
+  return {op:nm,co:COMPANIES[Math.floor(rnd()*COMPANIES.length)],am:AMS[Math.floor(rnd()*AMS.length)],market:mk[0],reg:mk[1],bets,cells};
+});
+
+let mode="last",view="bet",grp="flat",sortDesc=true,collapsed={};
+const el=id=>document.getElementById(id);
+function opts(sel,arr){sel.innerHTML="<option value=''>(All)</option>"+arr.map(v=>`<option>${v}</option>`).join("");}
+opts(el("fMarket"),[...new Set(MARKETS.map(m=>m[0]))]);opts(el("fAM"),[...new Set(OPS.map(o=>o.am))].sort());opts(el("fCompany"),[...new Set(OPS.map(o=>o.co))].sort());
+function fmtM(x){if(!x)return "0";return x>=1e6?(x/1e6).toFixed(1)+"M":Math.round(x/1e3)+"k";}
+function games(){
+  if(mode==="top")return [...GAMES_TOP].sort((a,b)=>b.perf-a.perf);
+  return [...GAMES_LAST].sort((a,b)=>a.days-b.days); // poslednja prva
+}
+function current(){
+  const mk=el("fMarket").value,am=el("fAM").value,co=el("fCompany").value,q=el("fSearch").value.trim().toLowerCase(),excl=el("tReg").checked;
+  let r=OPS.filter(o=>(!excl||!o.reg)&&(!mk||o.market===mk)&&(!am||o.am===am)&&(!co||o.co===co)&&(!q||o.op.toLowerCase().includes(q)));
+  r.sort((a,b)=>sortDesc?b.bets-a.bets:a.bets-b.bets);return r;
+}
+function cellVal(o,g){const c=o.cells[g.n];if(c.nc)return{nc:true};return{v:view==="ggr"?c.ggr:c.bet, live:(c.bet>0)};}
+function scaleClass(v,max){if(v<=0)return"n0";const r=v/max;return r>.6?"n4":r>.35?"n3":r>.15?"n2":"n1";}
+function render(){
+  const rows=current(),gs=games();
+  // max za skalu (po vidljivim ćelijama)
+  let max=1;rows.forEach(o=>gs.forEach(g=>{const c=cellVal(o,g);if(!c.nc&&c.v>max)max=c.v;}));
+  const total=rows.reduce((s,o)=>s+o.bets,0)||1;
+  let noAtTop=0,gaps=0;rows.slice(0,10).forEach(o=>gs.forEach(g=>{const c=cellVal(o,g);if(!c.nc&&c.v<=0)noAtTop++;}));
+  rows.forEach(o=>gs.forEach(g=>{const c=cellVal(o,g);if(!c.nc&&c.v<=0)gaps++;}));
+  el("kpis").innerHTML=`
+    <div class="kpi"><div class="v">${rows.length}</div><div class="l">operatera prikazano</div></div>
+    <div class="kpi"><div class="v">${gs.length}</div><div class="l">igara u prikazu (${mode==="top"?"Top 30":"last releases"})</div></div>
+    <div class="kpi"><div class="v b">${noAtTop}</div><div class="l">praznina kod TOP 10</div></div>
+    <div class="kpi"><div class="v">${gaps}</div><div class="l">ukupno praznina (0)</div></div>
+    <div class="kpi"><div class="v">${fmtM(total)}</div><div class="l">Σ Bets (prošli mesec)</div></div>`;
+  // header
+  let th=`<tr><th class="l rk">#</th><th class="l">Operater</th><th class="l">Company</th>`+(grp==="flat"?`<th class="l">AM</th>`:``)+`<th class="l">Market</th><th class="sortable act" id="thBets">Bets (pr.mesec) <span class="ar">${sortDesc?"▼":"▲"}</span></th><th>%</th>`;
+  gs.forEach(g=>{th+=`<th class="g">${g.n}${g.d?`<span class="d">${g.d}</span>`:g.perf?`<span class="d">perf ${fmtM(g.perf)}</span>`:``}</th>`;});
+  el("thead").innerHTML=th+"</tr>";el("thBets").onclick=()=>{sortDesc=!sortDesc;render();};
+  // rows
+  const colspan=6+(grp==="flat"?1:0)+gs.length;
+  function opRow(o,i){
+    const pct=o.bets/total*100,bw=Math.max(2,Math.round(o.bets/rows[0].bets*44));
+    let h=`<tr><td class="rk">${i}</td><td class="l"><span class="opn">${o.op}</span></td><td class="l co">${o.co}</td>`+
+      (grp==="flat"?`<td class="l am">${o.am}</td>`:``)+
+      `<td class="l mk">${o.market}<span class="tag ${o.reg?"reg":"non"}">${o.reg?"reg":"non"}</span></td>`+
+      `<td>${fmtM(o.bets)}<span class="bar" style="width:${bw}px"></span></td><td>${pct.toFixed(1)}%</td>`;
+    gs.forEach(g=>{const c=cellVal(o,g);
+      if(c.nc){h+=`<td class="nc" title="reg. tržište — nije sertifikovano">not cert.</td>`;return;}
+      if(view==="status"){h+= c.live?`<td class="st-live" title="${o.op} · ${g.n}: live">live</td>`:`<td class="st-no" title="${o.op} · ${g.n}: NIJE puštena">no gameplay</td>`;}
+      else{const cls=scaleClass(c.v,max);h+=`<td class="cell ${cls}" title="${o.op} · ${g.n}: ${c.v?fmtM(c.v)+" "+view.toUpperCase():"NIJE puštena"}">${fmtM(c.v)}</td>`;}
+    });
+    return h+"</tr>";
+  }
+  let html="";
+  if(grp==="flat"){rows.forEach((o,i)=>html+=opRow(o,i+1));}
+  else{
+    const byAM={};rows.forEach(o=>{(byAM[o.am]=byAM[o.am]||[]).push(o);});
+    Object.keys(byAM).sort((a,b)=>byAM[b].reduce((s,o)=>s+o.bets,0)-byAM[a].reduce((s,o)=>s+o.bets,0)).forEach(am=>{
+      const list=byAM[am],sub=list.reduce((s,o)=>s+o.bets,0);const isCol=collapsed[am];
+      html+=`<tr class="amrow ${isCol?"col":""}" data-am="${am}"><td class="rk"><span class="tw">▾</span></td><td class="l" colspan="${grp==="flat"?3:2}">${am} <span style="color:var(--mute);font-weight:400">(${list.length} op)</span></td><td class="l"></td><td>${fmtM(sub)}</td><td></td>${gs.map(()=>"<td></td>").join("")}</tr>`;
+      if(!isCol)list.forEach((o,i)=>html+=opRow(o,i+1));
+    });
+  }
+  el("tbody").innerHTML=html;
+  el("tbody").querySelectorAll(".amrow").forEach(r=>r.onclick=()=>{collapsed[r.dataset.am]=!collapsed[r.dataset.am];render();});
+  // legend
+  el("legend").innerHTML = view==="status"
+    ? `<span><i class="st-live"></i>live</span><span><i class="st-no"></i>no gameplay (0)</span><span><i class="nc"></i>not certified</span>`
+    : `<span><i class="n0"></i>0 = nije puštena</span><span><i class="n1"></i><i class="n2"></i><i class="n3"></i><i class="n4"></i> ${view.toUpperCase()} (svetlo→tamno = veće)</span><span><i class="nc"></i>not certified</span><span style="margin-left:auto">klik na „Bets" = sort · klik na AM red = skupi/raširi</span>`;
+}
+// mode/view/grp dugmad
+function seg(sel,attr,cb){document.querySelectorAll(sel).forEach(b=>b.onclick=()=>{if(b.id==="mCustom"){alert("Custom izbor pojedinačnih igara — planirano (treći mod). Za sada: Last releases ili Top 30.");return;}document.querySelectorAll(sel).forEach(x=>x.classList.remove("on"));b.classList.add("on");cb(b.dataset[attr]);render();});}
+seg("[data-mode]","mode",v=>mode=v);seg("[data-view]","view",v=>view=v);seg("[data-grp]","grp",v=>{grp=v;collapsed={};});
+["fPeriod","fMarket","fAM","fCompany","tReg"].forEach(id=>el(id).addEventListener("change",render));
+el("fSearch").addEventListener("input",render);
+el("btnExport").onclick=()=>{const rows=current(),gs=games();let csv=["#,Operater,Company,AM,Market,Bets,"+gs.map(g=>g.n).join(",")];const t=rows.reduce((s,o)=>s+o.bets,0)||1;rows.forEach((o,i)=>csv.push([i+1,o.op,o.co,o.am,o.market,Math.round(o.bets)].concat(gs.map(g=>{const c=cellVal(o,g);return c.nc?"nc":c.v;})).join(",")));const b=new Blob([csv.join("\n")],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="missing_games_"+mode+".csv";a.click();};
+el("btnReset").onclick=()=>{["fMarket","fAM","fCompany"].forEach(id=>el(id).value="");el("fSearch").value="";el("tReg").checked=true;el("fPeriod").value="90";sortDesc=true;collapsed={};render();};
+render();
+</script>
+</div></body></html>
