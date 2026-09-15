@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>vRTP Tool — prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--red:#C90429;--bg:#EDEEEF;--ink:#14161A;--mute:#6B7076;--line:#D5D7DA;--card:#fff;
+--g4:#2f8f4a;--g1:#d8ecdd;--r1:#f6d5da;--amb:#E7A400;--navy:#20375f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Montserrat,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px}
+.wrap{max-width:1320px;margin:0 auto;padding:20px 18px 70px}
+.banner{background:#fff;border:1px solid var(--line);border-left:3px solid var(--red);padding:9px 13px;font-size:11.5px;color:var(--mute);margin-bottom:14px}
+.banner b{color:var(--ink)}
+h1{font-size:18px;font-weight:700;margin:0 0 2px}.sub{color:var(--mute);font-size:12px;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:1fr 372px;gap:14px}
+@media(max-width:940px){.grid{grid-template-columns:1fr}}
+.pbi{background:#fff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tierbar{display:flex;padding:10px 14px;border-bottom:1px solid var(--line);align-items:center;flex-wrap:wrap;gap:0}
+.tierbar .sl{font-size:8.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);font-weight:600;margin-right:10px}
+.tier{font-family:"IBM Plex Mono",monospace;font-size:11px;border:1px solid var(--line);border-right:none;padding:5px 10px;cursor:pointer;background:#fff;position:relative}
+.tier:last-of-type{border-right:1px solid var(--line)}
+.tier.impl{background:#eef0f3;font-weight:600}
+.tier.impl:after{content:"impl";position:absolute;top:-7px;right:2px;font-size:6.5px;color:var(--mute);background:#eef0f3;padding:0 2px}
+.tier.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.fbar{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end;padding:11px 14px;border-bottom:1px solid var(--line);background:#F7F7F8}
+.brand{font-weight:700;color:var(--red);font-size:15px;letter-spacing:.5px;align-self:center}
+.fld{display:flex;flex-direction:column;gap:3px}
+.fld label{font-size:8.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);font-weight:600}
+.fld select,.fld input{font:inherit;font-size:11px;border:1px solid var(--line);background:#fff;padding:5px 8px;min-width:100px}
+.tgls{margin-left:auto;display:flex;gap:12px;align-items:center}
+.tgl{display:flex;align-items:center;gap:6px;font-size:10.5px;cursor:pointer;user-select:none}.tgl input{accent-color:var(--red);width:14px;height:14px}
+.btn{font:inherit;font-size:10.5px;border:1px solid var(--line);background:#fff;padding:6px 11px;cursor:pointer}.btn:hover{border-color:var(--red);color:var(--red)}
+.kpis{display:flex;border-bottom:1px solid var(--line)}
+.kpi{flex:1;padding:11px 14px;border-right:1px solid #EEE}.kpi:last-child{border-right:none}
+.kpi .v{font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:600;line-height:1}
+.kpi .v.b{color:var(--red)}.kpi .l{font-size:8.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);margin-top:3px}
+.scroll{overflow:auto;max-height:60vh}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:11px;font-family:"IBM Plex Mono",monospace}
+thead th{position:sticky;top:0;background:var(--navy);color:#fff;font-family:Montserrat,sans-serif;font-weight:600;font-size:8.5px;text-transform:uppercase;padding:7px;text-align:right;white-space:nowrap;border-right:1px solid #2c4470}
+thead th.l{text-align:left}thead th.sortable{cursor:pointer}thead th.sortable:hover{background:#2c4470}thead th.act{background:#2c4470}
+tbody td{padding:5px 7px;border-bottom:1px solid #EEE;border-right:1px solid #F3F3F3;text-align:right;white-space:nowrap}
+tbody td.l{text-align:left}
+tbody tr{cursor:pointer}tbody tr:hover td{background:#FAFAFB}tbody tr.sel td{background:#fdf3f4}
+.gm{font-family:Montserrat,sans-serif;font-weight:600}.pv{font-family:Montserrat,sans-serif;color:#3B4046;font-size:10px}
+.chip{display:inline-block;font-size:8.5px;padding:1px 6px;border:1px solid;font-weight:600}
+.c-da{color:var(--g4);border-color:var(--g4);background:var(--g1)}.c-ne{color:var(--mute);border-color:var(--line);background:#f2f2f2}
+.act-red{color:var(--red);font-weight:600}.act-ok{color:var(--g4)}.act-amb{color:#8a6d00}
+/* RTP range bar (min-max across operators) */
+.rng{position:relative;display:inline-block;width:104px;height:14px;vertical-align:middle;background:linear-gradient(90deg,#f6d5da,#fff6e0,#d8ecdd);border:1px solid #e2e2e2;margin-left:4px}
+.rng .seg{position:absolute;top:2px;height:10px;background:rgba(32,55,95,.28);border:1px solid var(--navy)}
+.rng .avg{position:absolute;top:-1px;width:2px;height:16px;background:var(--red)}
+.side{position:sticky;top:14px;align-self:start}
+.side .hd{padding:14px 14px 0}.side h3{font-size:13px;margin:0 0 3px}.side .m{font-size:11px;color:var(--mute);margin:0 0 10px}
+.side .body{padding:0 14px 14px}
+.optab{width:100%;border-collapse:collapse;font-size:10.5px;font-family:"IBM Plex Mono",monospace}
+.optab th{background:#f2f2f2;text-align:right;padding:4px 6px;font-family:Montserrat,sans-serif;font-size:8px;text-transform:uppercase;color:var(--mute)}
+.optab th.l,.optab td.l{text-align:left}.optab td{padding:4px 6px;border-bottom:1px solid #eee;text-align:right}
+.optab td.hi{color:var(--red);font-weight:600}
+.ctrl{background:#F7F7F8;border:1px solid var(--line);padding:10px;margin:10px 0}
+.ctrl .row{display:flex;justify-content:space-between;align-items:center;font-size:11px;margin:5px 0}
+.ctrl input[type=range]{width:100%;accent-color:var(--red);margin:4px 0 0}
+.ctrl input[type=number]{width:66px;font:inherit;font-size:11px;border:1px solid var(--line);padding:3px 5px}
+.ticks{display:flex;justify-content:space-between;font-size:8px;color:var(--mute)}
+.uplift{background:var(--g1);border:1px solid var(--g4);padding:9px 11px;margin:10px 0}
+.uplift.neg{background:var(--r1);border-color:var(--red)}
+.uplift .big{font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:600;color:var(--g4)}
+.uplift.neg .big{color:var(--red)}
+.lvltab{width:100%;border-collapse:collapse;font-size:10px;font-family:"IBM Plex Mono",monospace;margin-top:8px}
+.lvltab th{background:#f2f2f2;padding:3px 5px;font-family:Montserrat,sans-serif;font-size:8px;text-transform:uppercase;color:var(--mute);text-align:right}
+.lvltab td{padding:3px 5px;border-bottom:1px solid #eee;text-align:right}
+.lvltab tr.opt td{background:var(--g1);color:#0e3d1e;font-weight:600}
+.lvltab tr.cur td{outline:1px dashed var(--mute)}
+.empty{padding:44px 20px;text-align:center;color:var(--mute);font-size:12px}
+.cta{background:rgba(201,4,41,.05);border-left:3px solid var(--red);padding:8px 12px;font-size:11.5px;margin-top:14px}.cta b{color:var(--red)}
+.legend{display:flex;gap:13px;flex-wrap:wrap;font-size:9.5px;color:var(--mute);padding:9px 14px;border-top:1px solid var(--line)}
+</style></head><body><div class="wrap">
+<div class="banner"><b>vRTP Tool — prototype.</b> RTP is set <b>per operator</b>. Game rows show aggregates across operators; per-operator RTP, set flag, days-since-change and the effect simulator live in the right panel (click a game). Sample data.</div>
+<h1>vRTP Tool <span style="font-size:10px;color:var(--mute);font-weight:400">· source R3·16 · Product/Game + AM · ASAP</span></h1>
+<p class="sub">Help AMs move operators to a lower RTP — lower RTP raises hold, but only worth it if volume holds up. The simulator models both.</p>
+
+<div class="tierbar" id="tierbar"><span class="sl">RTP levels (click to filter operators running that level)</span></div>
+
+<div class="grid">
+ <div class="pbi">
+  <div class="fbar">
+    <span class="brand">fazi</span>
+    <div class="fld"><label>Game Studio</label><select id="fStudio"></select></div>
+    <div class="fld"><label>Company</label><select id="fCompany"></select></div>
+    <div class="fld"><label>Search game</label><input id="fSearch" placeholder="e.g. Wild…"></div>
+    <div class="tgls">
+      <label class="tgl"><input type="checkbox" id="tVrtp" checked> vRTP-capable only</label>
+      <label class="tgl"><input type="checkbox" id="tUnset"> has unset operators</label>
+      <button class="btn" id="btnExport">⤓ CSV</button></div>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div class="scroll"><table id="tbl"><thead><tr>
+    <th class="l">Game</th><th class="l">Studio</th><th class="l">vRTP</th>
+    <th class="sortable act" data-s="ops">Operators<br><span style="font-weight:400;opacity:.7">playing</span></th>
+    <th class="sortable" data-s="set">vRTP set</th>
+    <th class="l">RTP range <span style="font-weight:400;opacity:.7">(min–max, ● avg)</span></th>
+    <th class="sortable" data-s="cand">Candidates<br><span style="font-weight:400;opacity:.7">&gt;94.5%</span></th>
+    <th class="sortable" data-s="traffic">Traffic (Bet)</th><th class="l">Suggestion</th>
+  </tr></thead><tbody id="tbody"></tbody></table></div>
+  <div class="legend">Click a game → operator detail + effect simulator on the right. Red suggestion = vRTP available but not exploited. RTP range shows spread across operators.</div>
+ </div>
+
+ <div class="pbi side" id="side"><div class="body"><div class="empty">Select a game on the left → per-operator RTP detail and the RTP-reduction effect simulator.</div></div></div>
+</div>
+<div class="cta"><b>CTA:</b> „These operators run high RTP on this game → propose a lower level. Simulator: hold gain vs volume loss → is it worth it, and what is the optimal level."</div>
+
+<script>
+function seeded(s){return()=>{s=(s*9301+49297)%233280;return s/233280;}}
+const rnd=seeded(20260907);
+const TIERS=[87.5,89.5,91.5,93.5,94.5,95.5,96.5];
+const IMPL=94.5;
+const COMPANIES=["B2BAggregator","MozzartBet","Soft2Bet","BtoBet","Millennium","Grandpashabet","EGT Digital","1xBet","Betano"];
+const NAMES=["Wild Hot 40","Golden Crown","Very Hot 5 Extreme","Fruits and Stars","Wild 27","Bonus Epic Crown","Winning Clover 5","Book of Spells 2","Epic Clover 40","Crown of Secret","Wild Hot 40 Blow B.","Fruity Win 40","Triple Wild Crown","Golden Diamonds 40"];
+const GAMES=NAMES.map((n,i)=>{
+  const hasV=rnd()<0.72;
+  const nops=4+Math.floor(rnd()*24);
+  const ops=[];
+  for(let k=0;k<nops;k++){
+    // ako igra ima vRTP, deo operatera ima custom set (na raznim nivoima), ostali na default 96.5 (visok)
+    const setFlag = hasV && rnd()<0.5;
+    const rtp = setFlag ? TIERS[Math.floor(rnd()*TIERS.length)] : (rnd()<0.6?96.5:95.5); // nesetovani → visok default
+    const bet = Math.round((0.15+rnd()*3)*1e6);
+    const days = setFlag ? Math.floor(rnd()*70)+1 : null;
+    ops.push({op:COMPANIES[Math.floor(rnd()*COMPANIES.length)]+" "+(k+1),company:COMPANIES[Math.floor(rnd()*COMPANIES.length)],rtp,bet,set:setFlag,days});
+  }
+  return {n,studio:"Fazi",hasV,ops};
+});
+GAMES.forEach(g=>{
+  g.traffic=g.ops.reduce((s,o)=>s+o.bet,0);
+  g.rtpMin=Math.min(...g.ops.map(o=>o.rtp));g.rtpMax=Math.max(...g.ops.map(o=>o.rtp));
+  g.rtpAvg=g.ops.reduce((s,o)=>s+o.rtp*o.bet,0)/g.traffic;
+  g.setCount=g.ops.filter(o=>o.set).length;
+  g.cand=g.ops.filter(o=>o.rtp>94.5).length;
+});
+let sortKey="ops",sortDesc=true,selGame=null,targetRTP=null,elasticity=3.0;
+const el=id=>document.getElementById(id);
+el("tierbar").innerHTML+=TIERS.map(t=>`<span class="tier ${t===IMPL?'impl':''}" data-t="${t}">${t}%</span>`).join("");
+document.querySelectorAll(".tier").forEach(t=>t.onclick=()=>{t.classList.toggle("on");document.querySelectorAll(".tier").forEach(x=>{if(x!==t)x.classList.remove("on");});render();});
+function activeTier(){const on=document.querySelector(".tier.on");return on?+on.dataset.t:null;}
+el("fStudio").innerHTML="<option value=''>(All)</option><option selected>Fazi</option>";
+el("fCompany").innerHTML="<option value=''>(All)</option>"+COMPANIES.map(c=>`<option>${c}</option>`).join("");
+function current(){
+  const co=el("fCompany").value,q=el("fSearch").value.trim().toLowerCase(),onlyV=el("tVrtp").checked,onlyUnset=el("tUnset").checked,tier=activeTier();
+  let r=GAMES.filter(g=>{
+    if(onlyV&&!g.hasV)return false;
+    if(onlyUnset&&!g.ops.some(o=>!o.set&&g.hasV))return false;
+    if(q&&!g.n.toLowerCase().includes(q))return false;
+    if(co&&!g.ops.some(o=>o.company===co||o.op.startsWith(co)))return false;
+    if(tier!=null&&!g.ops.some(o=>Math.abs(o.rtp-tier)<0.01))return false;
+    return true;
+  });
+  const cmp={ops:(a,b)=>b.ops.length-a.ops.length,set:(a,b)=>b.setCount-a.setCount,cand:(a,b)=>b.cand-a.cand,traffic:(a,b)=>b.traffic-a.traffic};
+  r.sort(cmp[sortKey]||cmp.ops);if(!sortDesc)r.reverse();return r;
+}
+function fmtM(x){return x>=1e6?(x/1e6).toFixed(1)+"M":Math.round(x/1e3)+"k";}
+function rangeBar(g){const lo=87.5,hi=96.5,W=104;const x1=(g.rtpMin-lo)/(hi-lo)*W,x2=(g.rtpMax-lo)/(hi-lo)*W,xa=(g.rtpAvg-lo)/(hi-lo)*W;
+  return `<span class="rng" title="min ${g.rtpMin}% · avg ${g.rtpAvg.toFixed(1)}% · max ${g.rtpMax}%"><span class="seg" style="left:${x1}px;width:${Math.max(3,x2-x1)}px"></span><span class="avg" style="left:${xa}px"></span></span> <span class="pv">${g.rtpMin}–${g.rtpMax}%</span>`;}
+function render(){
+  const rows=current();
+  const withV=GAMES.filter(g=>g.hasV).length;
+  const unsetOps=GAMES.reduce((s,g)=>s+(g.hasV?g.ops.filter(o=>!o.set).length:0),0);
+  const wAvg=(GAMES.reduce((s,g)=>s+g.rtpAvg*g.traffic,0)/GAMES.reduce((s,g)=>s+g.traffic,0)).toFixed(1);
+  el("kpis").innerHTML=`
+    <div class="kpi"><div class="v">${withV}</div><div class="l">games with vRTP</div></div>
+    <div class="kpi"><div class="v b">${unsetOps}</div><div class="l">operator slots vRTP not set</div></div>
+    <div class="kpi"><div class="v">${TIERS.length}</div><div class="l">RTP levels</div></div>
+    <div class="kpi"><div class="v">${wAvg}%</div><div class="l">weighted avg live RTP</div></div>`;
+  document.querySelectorAll("thead [data-s]").forEach(t=>{t.classList.toggle("act",t.dataset.s===sortKey);t.onclick=()=>{if(sortKey===t.dataset.s)sortDesc=!sortDesc;else{sortKey=t.dataset.s;sortDesc=true;}render();};});
+  if(!rows.length){el("tbody").innerHTML=`<tr><td colspan="9"><div class="empty">No games match the filters.</div></td></tr>`;return;}
+  let html="";
+  rows.forEach(g=>{
+    const vchip=g.hasV?`<span class="chip c-da">YES</span>`:`<span class="chip c-ne">NO</span>`;
+    let sug,cls;
+    const unset=g.hasV?g.ops.filter(o=>!o.set).length:0;
+    if(!g.hasV){sug="no vRTP";cls="pv";}
+    else if(unset>0){sug=`set vRTP (${unset} op)`;cls="act-red";}
+    else if(g.cand>0){sug=`lower RTP (${g.cand} op &gt;94.5%)`;cls="act-amb";}
+    else{sug="ok";cls="act-ok";}
+    html+=`<tr data-g="${g.n}" class="${selGame===g.n?'sel':''}"><td class="l"><span class="gm">${g.n}</span></td><td class="l pv">${g.studio}</td><td class="l">${vchip}</td>`+
+      `<td>${g.ops.length}</td><td>${g.hasV?g.setCount:"—"}</td><td class="l">${rangeBar(g)}</td>`+
+      `<td>${g.cand}</td><td>${fmtM(g.traffic)}</td><td class="l ${cls}">${sug}</td></tr>`;
+  });
+  el("tbody").innerHTML=html;
+  el("tbody").querySelectorAll("tr[data-g]").forEach(tr=>tr.onclick=()=>{selGame=tr.dataset.g;const g=GAMES.find(x=>x.n===selGame);targetRTP=Math.max(87.5,Math.round((g.rtpAvg-2)*2)/2);renderSide();document.querySelectorAll("tr.sel").forEach(r=>r.classList.remove("sel"));tr.classList.add("sel");});
+}
+// --- Effect simulator with elasticity ---
+function projBet(bet,rtp0,rtpT){return Math.max(0,bet*(1+elasticity/100*(rtpT-rtp0)));} // higher RTP -> more bet
+function ggrAt(ops,rtpT){ // set operators above rtpT down to rtpT; others unchanged
+  let now=0,proj=0,betNow=0,betProj=0;
+  ops.forEach(o=>{
+    const applies=o.rtp>rtpT;
+    const rt=applies?rtpT:o.rtp;
+    const b=applies?projBet(o.bet,o.rtp,rtpT):o.bet;
+    now+=o.bet*(1-o.rtp/100); proj+=b*(1-rt/100);
+    betNow+=o.bet; betProj+=b;
+  });
+  return {now,proj,betNow,betProj};
+}
+function selectedOps(g){const co=el("fCompany").value;return co? g.ops.filter(o=>o.company===co||o.op.startsWith(co)) : g.ops;}
+function renderSide(){
+  const g=GAMES.find(x=>x.n===selGame);if(!g)return;
+  const co=el("fCompany").value;
+  const ops=selectedOps(g);
+  if(co && !ops.length){el("side").innerHTML=`<div class="hd"><h3>${g.n}</h3><p class="m">${g.studio}</p></div><div class="body"><div class="empty">No <b>${co}</b> operators run this game.</div></div>`;return;}
+  const r=ggrAt(ops,targetRTP);
+  const uplift=r.now>0?((r.proj/r.now-1)*100):0;
+  const betChg=r.betNow>0?((r.betProj/r.betNow-1)*100):0;
+  const cands=ops.filter(o=>o.rtp>targetRTP).sort((a,b)=>b.bet-a.bet);
+  // GGR by level (over selected operators)
+  let best={t:null,v:-1};const levelRows=TIERS.map(t=>{const rr=ggrAt(ops,t);if(rr.proj>best.v)best={t,v:rr.proj};return {t,v:rr.proj,bet:rr.betProj};});
+  let optab=`<table class="optab"><tr><th class="l">Operator</th><th>RTP</th><th>Bet</th><th>Bet→</th><th>GGR→</th></tr>`;
+  cands.slice(0,7).forEach(o=>{const b=projBet(o.bet,o.rtp,targetRTP);optab+=`<tr><td class="l">${o.op}</td><td class="hi">${o.rtp}%</td><td>${fmtM(o.bet)}</td><td class="pv">${fmtM(b)}</td><td style="color:var(--g4);font-weight:600">${fmtM(b*(1-targetRTP/100))}</td></tr>`;});
+  if(!cands.length)optab+=`<tr><td class="l" colspan="5" style="color:var(--mute)">No operators above ${targetRTP}% (nothing to lower).</td></tr>`;
+  optab+="</table>";
+  let lvltab=`<table class="lvltab"><tr><th class="l">Target RTP</th><th>Exp. Bet</th><th>Proj. GGR</th></tr>`;
+  levelRows.forEach(l=>{const cls=(l.t===best.t?"opt":"")+(Math.abs(l.t-targetRTP)<0.01?" cur":"");lvltab+=`<tr class="${cls}"><td class="l">${l.t}%${l.t===best.t?" �star":""}</td><td>${fmtM(l.bet)}</td><td>${fmtM(l.v)}</td></tr>`;});
+  lvltab=lvltab.replace(/�star/g,"★")+"</table>";
+  const sMin=Math.min(...ops.map(o=>o.rtp)),sMax=Math.max(...ops.map(o=>o.rtp)),sAvg=ops.reduce((s,o)=>s+o.rtp*o.bet,0)/ops.reduce((s,o)=>s+o.bet,0);
+  const scope=co?`<b style="color:var(--red)">${co}</b> only · `:``;
+  el("side").innerHTML=`<div class="hd"><h3>${g.n}</h3><p class="m">${scope}${g.studio} · ${ops.length} operators · RTP ${sMin}–${sMax}% (avg ${sAvg.toFixed(1)}%) · ${ops.filter(o=>o.set).length} set</p></div>
+   <div class="body">
+    <div class="ctrl">
+      <div class="row"><span>Target RTP</span><b style="font-family:'IBM Plex Mono',monospace">${targetRTP.toFixed(1)}%</b></div>
+      <input type="range" id="sl" min="87.5" max="96.5" step="1" value="${targetRTP}">
+      <div class="ticks">${TIERS.map(t=>`<span>${t}</span>`).join("")}</div>
+      <div class="row" style="margin-top:9px"><span>Bet elasticity <span class="pv">(% bet per +1pp RTP)</span></span><input type="number" id="elas" value="${elasticity}" step="0.5" min="0" max="15"></div>
+    </div>
+    <div class="uplift ${uplift<0?'neg':''}"><div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)">Projected GGR effect @ ${targetRTP}%</div>
+      <div class="big">${uplift>=0?'+':''}${uplift.toFixed(0)}%</div>
+      <div style="font-size:10.5px">≈ ${uplift>=0?'+':''}${fmtM(r.proj-r.now)} GGR · expected Bet ${betChg>=0?'+':''}${betChg.toFixed(0)}% (${fmtM(r.betProj)})</div>
+      <div style="font-size:9.5px;color:var(--mute);margin-top:3px">${uplift<0?'⚠ Volume loss outweighs hold gain — not worth lowering this far.':'Hold gain beats volume loss.'}</div>
+    </div>
+    <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);margin:10px 0 3px">GGR by RTP level (★ = optimum)</div>
+    ${lvltab}
+    <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);margin:12px 0 3px">Candidate operators (above target)</div>
+    ${optab}
+    <div style="font-size:9.5px;color:var(--mute);margin-top:8px">Model: Bet(target)=Bet×(1+elasticity×(target−RTP)); GGR=Bet×(1−RTP). Elasticity is an assumption — calibrate with real data (Product/Milovan).</div>
+   </div>`;
+  el("sl").oninput=e=>{targetRTP=+e.target.value;renderSide();};
+  el("elas").oninput=e=>{elasticity=Math.max(0,+e.target.value||0);renderSide();};
+}
+["fStudio","fCompany","tVrtp","tUnset"].forEach(id=>el(id).addEventListener("change",()=>{render();if(selGame&&GAMES.find(x=>x.n===selGame))renderSide();}));
+el("fSearch").addEventListener("input",render);
+el("btnExport").onclick=()=>{const rows=current();let h=["Game,Studio,vRTP,OperatorsPlaying,vRTPset,RTPmin,RTPmax,RTPavg,Candidates>94.5,Traffic"];rows.forEach(g=>h.push([g.n,g.studio,g.hasV?"YES":"NO",g.ops.length,g.setCount,g.rtpMin,g.rtpMax,g.rtpAvg.toFixed(1),g.cand,g.traffic].join(",")));const b=new Blob([h.join("\n")],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="vrtp_tool.csv";a.click();};
+render();
+</script>
+</div></body></html>
