@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Navigation Hub — prototip</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--red:#C90429;--bg:#EDEEEF;--ink:#14161A;--mute:#6B7076;--line:#D5D7DA;--card:#fff;--g4:#2f8f4a;--amb:#E7A400;--navy:#20375f;--blue:#3b6fb5;--pur:#6d28a8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Montserrat,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 18px 60px}
+.banner{background:#fff;border:1px solid var(--line);border-left:3px solid var(--red);padding:9px 13px;font-size:11.5px;color:var(--mute);margin-bottom:12px}
+.banner b{color:var(--ink)}
+.top{background:#12203b;color:#fff;border-radius:4px;padding:16px 20px;margin-bottom:8px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:20px;letter-spacing:.5px;color:#fff}
+.top h1{font-size:15px;font-weight:600;margin:0;flex:1}
+.top .sub{font-size:11px;color:#9fb0cf;font-weight:400;display:block;margin-top:2px}
+.tenantnote{background:#17264a;border:1px solid #2c4470;border-radius:4px;padding:8px 13px;font-size:11px;color:#cdd8ea;margin-bottom:14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.tenantnote .dot{display:inline-flex;align-items:center;gap:5px}
+.tenantnote i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.controls{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.filters{display:flex;gap:0}
+.filters button{font:inherit;font-size:11px;border:1px solid var(--line);background:#fff;padding:7px 13px;cursor:pointer;color:var(--mute);border-right:none}
+.filters button:last-child{border-right:1px solid var(--line)}
+.filters button.on{background:var(--navy);color:#fff;border-color:var(--navy);font-weight:600}
+.search{margin-left:auto;font:inherit;font-size:12px;border:1px solid var(--line);padding:7px 11px;min-width:200px}
+.cat{margin-bottom:20px}
+.cat h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);font-weight:700;margin:0 0 9px;padding-bottom:5px;border-bottom:2px solid var(--navy);display:flex;align-items:center;gap:8px}
+.cat h2 .cnt{margin-left:auto;font-size:9px;color:var(--mute);font-weight:400;letter-spacing:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.card{background:#fff;border:1px solid var(--line);border-radius:4px;padding:12px 13px;cursor:pointer;position:relative;border-top:3px solid var(--line);transition:box-shadow .1s,transform .1s;display:flex;flex-direction:column;min-height:96px}
+.card:hover{box-shadow:0 3px 10px rgba(0,0,0,.1);transform:translateY(-1px)}
+.card.fazi{border-top-color:var(--g4)}.card.c3p{border-top-color:var(--amb)}.card.wip{border-top-color:var(--blue)}.card.tbd{border-top-color:#b8bcc2;background:#fafafa}
+.card .nm{font-weight:600;font-size:13px;margin-bottom:3px}
+.card .ds{font-size:10.5px;color:var(--mute);line-height:1.4;flex:1}
+.card .foot{display:flex;align-items:center;gap:6px;margin-top:9px;flex-wrap:wrap}
+.tag{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:2px 6px;border-radius:2px}
+.tag.fazi{background:#e4f1e8;color:#1f7a34}.tag.c3p{background:#fbeecb;color:#8a6d00}.tag.wip{background:#e6eef8;color:#2c5aa0}.tag.tbd{background:#eee;color:#888}
+.src{font-size:9px;color:#9aa0a6;font-family:"IBM Plex Mono",monospace}
+.open{font-size:9px;color:var(--mute)}
+.card.c3p .open::before{content:"↗ otvara u C3P tenantu"}
+.card.fazi .open::before{content:"↗ otvara u Fazi"}
+.card.wip .open::before{content:"● u izradi"}
+.card.tbd .open::before{content:"treba definisati"}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:10px;color:var(--mute);margin-top:8px;padding-top:10px;border-top:1px solid var(--line)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:20px;height:3px;display:inline-block}
+.empty{color:var(--mute);font-size:11px;padding:6px 2px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.on{display:flex}
+.modalbox{background:#fff;border-radius:6px;max-width:440px;padding:20px 22px}
+.modalbox h3{margin:0 0 4px;font-size:15px}.modalbox .mt{font-size:10px;color:var(--mute);font-family:"IBM Plex Mono",monospace;margin-bottom:10px}
+.modalbox p{font-size:12px;color:#3B4046;line-height:1.55;margin:0 0 12px}
+.modalbox .x{font:inherit;font-size:11px;border:1px solid var(--line);background:#fff;padding:6px 12px;cursor:pointer;border-radius:2px}
+</style></head><body><div class="wrap">
+<div class="banner"><b>Navigation Hub — prototip.</b> Jedan ulaz u sve reporte, po kategorijama (BRAGG-stil). Svaka kartica pokazuje kom tenantu pripada i status. Klik = detalj (u finalu: otvara report). Podaci/raspored = predlog.</div>
+<div class="top"><span class="brand">fazi</span><h1>Navigation Hub<span class="sub">Svi reporti na jednom mestu — po nameni</span></h1></div>
+<div class="tenantnote"><span style="font-weight:600;color:#fff">⚠ Dva tenanta:</span>
+  <span class="dot"><i style="background:#2f8f4a"></i> Fazi (naš) — otvara se ovde</span>
+  <span class="dot"><i style="background:#E7A400"></i> C3P (Roganović) — otvara se u C3P tenantu</span>
+  <span class="dot"><i style="background:#3b6fb5"></i> u izradi</span>
+  <span class="dot"><i style="background:#b8bcc2"></i> treba definisati</span></div>
+<div class="controls">
+  <div class="filters" id="filters">
+    <button data-f="all" class="on">Sve</button><button data-f="fazi">🟢 Fazi</button><button data-f="c3p">🟡 C3P</button><button data-f="wip">🔵 Novo / u izradi</button></div>
+  <input class="search" id="search" placeholder="🔍 pretraga reporta…">
+</div>
+<div id="cats"></div>
+<div class="legend">
+  <span><i style="background:#2f8f4a"></i>Fazi (native)</span>
+  <span><i style="background:#E7A400"></i>C3P (drugi tenant)</span>
+  <span><i style="background:#3b6fb5"></i>u izradi (novo)</span>
+  <span><i style="background:#b8bcc2"></i>TBD (nedefinisano)</span>
+</div>
+<div class="modal" id="modal"><div class="modalbox"><h3 id="mnm"></h3><div class="mt" id="msrc"></div><p id="mds"></p><button class="x" id="mx">Zatvori</button></div></div>
+
+<script>
+// status: fazi | c3p | wip | tbd
+const CATS=[
+ {name:"Management",items:[
+   {nm:"Management Report",st:"wip",src:"novo · R6 + R11 Risk",ds:"Tanak exec presek: KPI + Risk & Growth status po tržištu/operateru."},
+ ]},
+ {name:"Operational",items:[
+   {nm:"Operational / Support",st:"fazi",src:"R5 (prepakovan)",ds:"System Health, alarmi i praćenje negativnog GGR-a. Bivši Support."},
+ ]},
+ {name:"Account Management",items:[
+   {nm:"Last Releases",st:"wip",src:"novo · osnova R11·03",ds:"Poslednja lansiranja: kod koliko operatera i koliko donose; ko nije pustio."},
+   {nm:"GAP analysis",st:"wip",src:"novo · Nora VERY IMPORTANT",ds:"Po operateru: šta radi kod njega vs u tržištu → rupa sa akcijom. Još nema mockup."},
+   {nm:"Best Performers",st:"wip",src:"novo · real-time",ds:"Top igre/operateri po performansama, dnevno/real-time. Još nema mockup."},
+   {nm:"QBR / MBR",st:"fazi",src:"R11·09 (R14 gasi dup)",ds:"Kvartalni/mesečni pregled klijenta za AM sastanke. Već postoji."},
+   {nm:"Promo modul",st:"fazi",src:"proširen R7 · ⚠ 2 tenanta",ds:"Schedule + Performance + Billing/TBP + Register. Vuče i C3P i Fazi strane — tenant izazov."},
+ ]},
+ {name:"Product / Game",items:[
+   {nm:"New Release deep-dive",st:"fazi",src:"R12 (postoji)",ds:"Analiza jedne igre posle lansiranja (Bet/GGR/UAP kroz dane). Ostaje kakav je."},
+   {nm:"Scan-all / Full Launched",st:"wip",src:"novo · nad R12",ds:"Sve poslednje igre odjednom, sortirane po datumu."},
+   {nm:"vRTP alat",st:"wip",src:"novo · Ivica ASAP",ds:"Efekat spuštanja RTP-a na GGR + gde vRTP nije setovan → komercijalna poluga."},
+ ]},
+ {name:"Financial / Billing",items:[
+   {nm:"Payout",st:"c3p",src:"R2",ds:"Obračun po kompaniji i operateru. Konsoliduje se 4→1."},
+   {nm:"To Be Paid",st:"c3p",src:"R2",ds:"Iznos za isplatu/fakturu operateru."},
+   {nm:"Profit",st:"c3p",src:"R8",ds:"Jedina margin mera (profit po integraciji). Blokada: definicija + vlasnik."},
+   {nm:"Operator Tax",st:"c3p",src:"R1·20",ds:"Poreske stope po operateru (reference-podaci)."},
+   {nm:"GGR forecast",st:"fazi",src:"R11",ds:"GGR prognoza (daily + monthly → 1 param)."},
+   {nm:"Struktura prihoda",st:"fazi",src:"R11",ds:"Prihod po godini starta kompanije / izlaska igre (portfolio aging)."},
+ ]},
+ {name:"+ Pomoćne",items:[
+   {nm:"Player Tracking",st:"c3p",src:"R11·04 · RLS",ds:"Top igrači / PlayerID. Row-level → traži kontrolu pristupa."},
+   {nm:"Uputstva",st:"tbd",src:"Confluence",ds:"Vodiči i procedure za korišćenje reporta. Žive u Confluence-u, ne u Power BI-ju."},
+ ]},
+];
+let filter="all",q="";
+const el=id=>document.getElementById(id);
+function render(){
+ const host=el("cats");host.innerHTML="";
+ CATS.forEach(cat=>{
+   const items=cat.items.filter(it=>(filter==="all"||it.st===filter)&&(!q||it.nm.toLowerCase().includes(q)||it.ds.toLowerCase().includes(q)));
+   if(!items.length)return;
+   const div=document.createElement("div");div.className="cat";
+   div.innerHTML=`<h2>${cat.name}<span class="cnt">${items.length} ${items.length===1?'report':'reporta'}</span></h2>`+
+     `<div class="grid">`+items.map((it,i)=>`<div class="card ${it.st}" data-cat="${cat.name}" data-i="${cat.items.indexOf(it)}"><div class="nm">${it.nm}</div><div class="ds">${it.ds}</div><div class="foot"><span class="tag ${it.st}">${({fazi:'Fazi',c3p:'C3P',wip:'u izradi',tbd:'TBD'})[it.st]}</span><span class="src">${it.src}</span></div><div class="open"></div></div>`).join("")+`</div>`;
+   host.appendChild(div);
+ });
+ if(!host.children.length)host.innerHTML='<div class="empty">Nema reporta za ovaj filter.</div>';
+ host.querySelectorAll(".card").forEach(c=>c.onclick=()=>{
+   const cat=CATS.find(x=>x.name===c.dataset.cat);const it=cat.items[+c.dataset.i];
+   el("mnm").textContent=it.nm;el("msrc").textContent=it.src+" · "+({fazi:'Fazi tenant (otvara se ovde)',c3p:'C3P tenant (Roganović — otvara se tamo)',wip:'u izradi',tbd:'nedefinisano'})[it.st];
+   el("mds").textContent=it.ds+(it.st==="c3p"?"  —  Napomena: nalazi se na C3P (Roganovićevom) tenantu.":"");
+   el("modal").classList.add("on");
+ });
+}
+el("filters").querySelectorAll("button").forEach(b=>b.onclick=()=>{el("filters").querySelectorAll("button").forEach(x=>x.classList.remove("on"));b.classList.add("on");filter=b.dataset.f;render();});
+el("search").oninput=e=>{q=e.target.value.trim().toLowerCase();render();};
+el("mx").onclick=()=>el("modal").classList.remove("on");
+el("modal").onclick=e=>{if(e.target===el("modal"))el("modal").classList.remove("on");};
+render();
+</script>
+</div></body></html>
