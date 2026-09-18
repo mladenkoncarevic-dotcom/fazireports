@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RTP pregled — vRTP prilika za AM</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--red:#C90429;--bg:#EDEEEF;--ink:#14161A;--mute:#6B7076;--line:#D5D7DA;--card:#fff;--g4:#2f8f4a;--g1:#d8ecdd;--amb:#E7A400;--navy:#20375f;--blue:#3b6fb5;--r1:#f6d5da}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Montserrat,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px}
+.wrap{max-width:1340px;margin:0 auto;padding:20px 18px 70px}
+.banner{background:#fff;border:1px solid var(--line);border-left:3px solid var(--red);padding:11px 14px;font-size:11.5px;color:#3B4046;margin-bottom:8px;line-height:1.55}
+.banner b{color:var(--ink)}
+.svrha{background:#f4f7fb;border:1px solid var(--navy);padding:9px 13px;font-size:11px;color:#12203b;margin-bottom:14px;line-height:1.5}
+h1{font-size:18px;font-weight:700;margin:0 0 2px}.sub{color:var(--mute);font-size:12px;margin:0 0 14px}
+.grid{display:grid;grid-template-columns:1fr 440px;gap:14px}
+@media(max-width:980px){.grid{grid-template-columns:1fr}}
+.pbi{background:#fff;border:1px solid var(--line)}
+.fbar{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end;padding:11px 14px;border-bottom:1px solid var(--line);background:#F7F7F8}
+.brand{font-weight:700;color:var(--red);font-size:15px;letter-spacing:.5px;align-self:center}
+.fld{display:flex;flex-direction:column;gap:3px}.fld label{font-size:8.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);font-weight:600}
+.fld select,.fld input{font:inherit;font-size:11px;border:1px solid var(--line);background:#fff;padding:5px 8px;min-width:110px}
+.tgl{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10.5px;cursor:pointer;align-self:center}.tgl input{accent-color:var(--red);width:14px;height:14px}
+.scroll{overflow:auto;max-height:60vh}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:11px;font-family:"IBM Plex Mono",monospace}
+thead th{position:sticky;top:0;background:var(--navy);color:#fff;font-family:Montserrat,sans-serif;font-weight:600;font-size:8.5px;text-transform:uppercase;padding:7px;text-align:right;white-space:nowrap;border-right:1px solid #2c4470}
+thead th.l{text-align:left}
+tbody td{padding:5px 7px;border-bottom:1px solid #EEE;text-align:right;white-space:nowrap}tbody td.l{text-align:left}
+tbody tr{cursor:pointer}tbody tr:hover td{background:#FAFAFB}tbody tr.sel td{background:#fdf3f4}
+.gm{font-family:Montserrat,sans-serif;font-weight:600}.fam{font-size:9px;color:var(--mute)}
+.chip{display:inline-block;font-size:8.5px;padding:1px 6px;border:1px solid;font-weight:600}
+.c-da{color:var(--g4);border-color:var(--g4);background:var(--g1)}.c-ne{color:var(--mute);border-color:var(--line);background:#f2f2f2}
+.rng{display:inline-block;width:96px;height:11px;background:linear-gradient(90deg,#f6d5da,#fff6e0,#d8ecdd);border:1px solid #e2e2e2;position:relative;vertical-align:middle}
+.rng .m{position:absolute;top:-2px;width:2px;height:15px;background:var(--navy)}
+.side{position:sticky;top:14px;align-self:start}.side .hd{padding:13px 14px 0}.side h3{font-size:14px;margin:0 0 2px}.side .m{font-size:11px;color:var(--mute);margin:0 0 8px}
+.side .body{padding:0 14px 14px}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.kv .b{background:#F7F7F8;border:1px solid var(--line);padding:6px 10px;min-width:96px}.kv .b .l{font-size:8px;text-transform:uppercase;color:var(--mute)}.kv .b .v{font-family:"IBM Plex Mono",monospace;font-size:15px;font-weight:600}
+.sec{margin-top:12px}.sec .st{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);font-weight:700;margin-bottom:5px}
+.tab{width:100%;border-collapse:collapse;font-size:10px;font-family:"IBM Plex Mono",monospace}
+.tab th{background:#f2f2f2;text-align:right;padding:3px 6px;font-family:Montserrat,sans-serif;font-size:8px;text-transform:uppercase;color:var(--mute)}
+.tab th.l,.tab td.l{text-align:left}.tab td{padding:3px 6px;border-bottom:1px solid #eee;text-align:right}
+.up{color:var(--g4);font-weight:600}.dn{color:var(--red);font-weight:600}
+.cand{background:#fff6e0}
+.argument{background:var(--g1);border:1px solid var(--g4);padding:9px 11px;margin-top:8px;font-size:10.5px;line-height:1.5}
+.argument a{color:var(--navy);font-weight:600}
+.empty{padding:44px 20px;text-align:center;color:var(--mute);font-size:12px}
+.cta{background:rgba(201,4,41,.05);border-left:3px solid var(--red);padding:8px 12px;font-size:11.5px;margin-top:14px}.cta b{color:var(--red)}
+</style></head><body><div class="wrap">
+<div class="banner"><b>RTP pregled — vRTP prilika za AM (mockup).</b> AM-facing pogled: koje igre imaju vRTP, u kom rasponu, gde je već primenjen niži RTP, i kod kojih operatera vredi predložiti spuštanje. Podaci uzorak.</div>
+<div class="svrha"><b>Svrha (nije analiza efekta — to već radi postojeći RTP report):</b> ovaj pogled služi AM-u da <b>brzo vidi vRTP katalog i prilike</b> — koje igre podržavaju vRTP i raspon, kod kojih klijenata je već setovan niži RTP, i koji su kandidati za razgovor. Za <b>dokaz efekta</b> (GGR pre/posle) vodi na postojeći „RTP Configuration" report.</div>
+<h1>RTP pregled <span style="font-size:10px;color:var(--mute);font-weight:400">· vRTP katalog i prilika · AM</span></h1>
+<p class="sub">Klik na igru → raspon, gde je primenjeno, kandidati, i argument (link na dokaz).</p>
+
+<div class="grid">
+ <div class="pbi">
+  <div class="fbar"><span class="brand">fazi</span>
+    <div class="fld"><label>Familija</label><select id="fFam"></select></div>
+    <div class="fld"><label>Account Manager</label><select id="fAm"></select></div>
+    <div class="fld"><label>Pretraga</label><input id="fSearch" placeholder="igra…"></div>
+    <label class="tgl"><input type="checkbox" id="tVrtp" checked> samo igre sa vRTP</label>
+  </div>
+  <div class="scroll"><table><thead><tr>
+    <th class="l">Igra</th><th class="l">vRTP?</th><th class="l">Raspon (min–max)</th><th>Default</th><th>Primenjeno (operatera)</th><th>Kandidata</th>
+  </tr></thead><tbody id="tbody"></tbody></table></div>
+ </div>
+ <div class="pbi side" id="side"><div class="body"><div class="empty">Izaberi igru → vRTP raspon, gde je primenjeno, i kandidati za spuštanje.</div></div></div>
+</div>
+<div class="cta"><b>CTA:</b> „Ova igra ima vRTP (raspon X–Y). Kod ovih velikih operatera je još na visokom RTP-u — predlog za razgovor; dokaz efekta kod onih koji su već spustili je u RTP Configuration reportu."</div>
+
+<script>
+function seeded(s){return()=>{s=(s*9301+49297)%233280;return s/233280;}}
+function hash(str){let h=7;for(const c of str)h=(h*31+c.charCodeAt(0))%99991;return h;}
+const NAMES=["Wild Hot 40","Golden Crown","Very Hot 5 Extreme","Winning Clover 5","Wild 27","Bonus Epic Crown","Book of Spells 2","Fruit Lock 7","Locked Hearts 10","Star Heat 40","Royalgarden King","Golden Diamonds 20 Extreme"];
+const AMS=["Andjelija K.","Nevena S.","Vukašin S.","Andjela K.","Maria N."];
+const COMP=["Betking","GameKong","Soccerbet","BongoBongo","Casino770","Dux","Lemoncasino","Gamingtec","Synot Maxbet","Softswiss Orobet","Mozzart","1xBet"];
+function fam(n){const w=n.toLowerCase();if(w.startsWith("wild"))return"Wild";if(w.startsWith("golden"))return"Golden";if(w.includes("clover"))return"Clover";if(w.startsWith("locked hearts"))return"Locked Hearts";if(w.startsWith("royalgarden"))return"Royalgarden";if(w.startsWith("fruit"))return"Fruit";if(w.startsWith("bonus"))return"Bonus";if(w.includes("hot")||w.includes("heat"))return"Hot";return"Ostalo";}
+function fmtM(x){return x>=1e6?(x/1e6).toFixed(2)+"M":x>=1e3?(x/1e3).toFixed(0)+"k":Math.round(x);}
+
+const GAMES=NAMES.map(n=>{
+ const r=seeded(hash(n)+9);
+ const hasV=r()<0.75;
+ const mn=hasV?(88+Math.floor(r()*3)):null;         // min raspon
+ const mx=hasV?(95+Math.round(r()*15)/10):null;      // max raspon
+ const def=hasV?(94+Math.round(r()*20)/10):96.5;     // default (visok)
+ const nops=6+Math.floor(r()*10);
+ const ops=[];
+ for(let k=0;k<nops;k++){
+   const applied=hasV&&r()<0.4;                       // vec spusten
+   const rtp=applied?(mn+Math.round(r()*(def-mn-0.5)*10)/10):def; // ako primenjen -> nizi
+   const bet=Math.round((0.4+r()*3.2)*1e6);
+   const ggrVar=applied?Math.round((10+r()*40)):null; // GGR var% posle spustanja (dokaz)
+   ops.push({op:COMP[Math.floor(r()*COMP.length)]+" "+(k+1),am:AMS[Math.floor(r()*AMS.length)],rtp,def,bet,applied,ggrVar,since:["pre 2 mes","pre 4 mes","pre 1 mes","pre 6 mes"][Math.floor(r()*4)]});
+ }
+ return {n,fam:fam(n),hasV,mn,mx,def,ops};
+});
+
+let sel=null,fFam="",fAm="",q="";
+const el=id=>document.getElementById(id);
+el("fFam").innerHTML="<option value=''>(sve familije)</option>"+[...new Set(GAMES.map(g=>g.fam))].sort().map(f=>`<option>${f}</option>`).join("");
+el("fAm").innerHTML="<option value=''>(svi AM)</option>"+AMS.map(a=>`<option>${a}</option>`).join("");
+function rows(){return GAMES.filter(g=>(!el("tVrtp").checked||g.hasV)&&(!fFam||g.fam===fFam)&&(!q||g.n.toLowerCase().includes(q))&&(!fAm||g.ops.some(o=>o.am===fAm)));}
+function rangeBar(g){if(!g.hasV)return '<span class="fam">—</span>';const lo=87,hi=97;const x1=(g.mn-lo)/(hi-lo)*96,x2=(g.mx-lo)/(hi-lo)*96,xd=(g.def-lo)/(hi-lo)*96;return `<span class="rng" title="${g.mn}–${g.mx}%"><span class="m" style="left:${x1}px;background:#2f8f4a"></span><span class="m" style="left:${x2}px;background:#C90429"></span><span class="m" style="left:${xd}px;background:#20375f"></span></span> <span class="fam">${g.mn}–${g.mx}</span>`;}
+function render(){
+ let html="";
+ rows().forEach(g=>{
+   const applied=g.ops.filter(o=>o.applied).length;
+   const cand=g.hasV?g.ops.filter(o=>!o.applied&&o.rtp>=g.def-0.01).length:0;
+   html+=`<tr data-g="${g.n}" class="${sel===g.n?'sel':''}"><td class="l"><span class="gm">${g.n}</span></td>`+
+     `<td class="l">${g.hasV?'<span class="chip c-da">vRTP</span>':'<span class="chip c-ne">ne</span>'}</td>`+
+     `<td class="l">${rangeBar(g)}</td><td>${g.hasV?g.def+'%':'—'}</td>`+
+     `<td>${g.hasV?applied:'—'}</td><td>${g.hasV?(cand>0?'↓ '+cand:'0'):'—'}</td></tr>`;
+ });
+ el("tbody").innerHTML=html||'<tr><td class="l" colspan="6" style="color:var(--mute);padding:20px">Nema igara za ovaj filter.</td></tr>';
+ el("tbody").querySelectorAll("tr[data-g]").forEach(tr=>tr.onclick=()=>{sel=tr.dataset.g;side();document.querySelectorAll("tr.sel").forEach(r=>r.classList.remove("sel"));tr.classList.add("sel");});
+}
+function side(){
+ const g=GAMES.find(x=>x.n===sel);if(!g)return;
+ if(!g.hasV){el("side").innerHTML=`<div class="hd"><h3>${g.n}</h3><p class="m">${g.fam}</p></div><div class="body"><div class="argument" style="background:#f2f2f2;border-color:var(--line)">Ova igra <b>ne podržava vRTP</b> — nema šta da se predlaže operaterima po pitanju RTP-a.</div></div>`;return;}
+ const applied=g.ops.filter(o=>o.applied).sort((a,b)=>b.bet-a.bet);
+ const cand=g.ops.filter(o=>!o.applied).sort((a,b)=>b.bet-a.bet);
+ let appTab=`<table class="tab"><tr><th class="l">Operater</th><th>RTP</th><th>od</th><th>GGR posle</th></tr>`;
+ applied.slice(0,6).forEach(o=>appTab+=`<tr><td class="l">${o.op} <span class="fam">${o.am}</span></td><td>${o.rtp}%</td><td>${o.since}</td><td class="up">+${o.ggrVar}%</td></tr>`);
+ if(!applied.length)appTab+=`<tr><td class="l" colspan="4" style="color:var(--mute)">Nijedan operater još nije spustio RTP na ovoj igri.</td></tr>`;
+ appTab+="</table>";
+ let candTab=`<table class="tab"><tr><th class="l">Kandidat</th><th>Trenutni RTP</th><th>Bet</th></tr>`;
+ cand.slice(0,7).forEach(o=>candTab+=`<tr class="cand"><td class="l">${o.op} <span class="fam">${o.am}</span></td><td class="dn">${o.rtp}%</td><td>${fmtM(o.bet)}</td></tr>`);
+ if(!cand.length)candTab+=`<tr><td class="l" colspan="3" style="color:var(--mute)">Svi operateri su već na nižem RTP-u.</td></tr>`;
+ candTab+="</table>";
+ el("side").innerHTML=`<div class="hd"><h3>${g.n}</h3><p class="m">${g.fam} · ${g.ops.length} operatera</p></div>
+  <div class="body">
+    <div class="kv"><div class="b"><div class="l">vRTP raspon</div><div class="v">${g.mn}–${g.mx}%</div></div><div class="b"><div class="l">Default RTP</div><div class="v">${g.def}%</div></div><div class="b"><div class="l">Primenjeno</div><div class="v">${applied.length}/${g.ops.length}</div></div></div>
+    <div class="sec"><div class="st">Gde je već primenjen niži RTP</div>${appTab}</div>
+    <div class="sec"><div class="st">Kandidati za spuštanje (visok RTP + volumen)</div>${candTab}</div>
+    <div class="argument"><b>Argument za razgovor:</b> kod operatera gore levo je RTP već spušten i GGR je porastao (stvarni podaci). Za pun dokaz pre/posle po konfiguraciji → <a href="#">RTP Configuration report</a>. <span class="fam">(Projektovani efekat za kandidate je samo indikativan — koristiti stvarne primere, ne obećanje.)</span></div>
+  </div>`;
+}
+["fFam","fAm","tVrtp"].forEach(id=>el(id).addEventListener("change",()=>{fFam=el("fFam").value;fAm=el("fAm").value;render();}));
+el("fSearch").addEventListener("input",e=>{q=e.target.value.trim().toLowerCase();render();});
+render();
+</script>
+</div></body></html>
