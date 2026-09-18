@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="sr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Management Report — v4</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#eaf0fa;--mute:#8fa0bd;--card:#16223a;--line:#26375a;--g4:#3ddc84;--red:#ff5470;--amb:#ffce54;--blue:#5b8def;--purple:#a78bfa}
+*{box-sizing:border-box}
+body{margin:0;background:#0a1120;color:var(--ink);font-family:Montserrat,"Segoe UI",Helvetica,Arial,sans-serif;font-size:13px}
+.wrap{max-width:1120px;margin:0 auto;padding:18px 16px 60px}
+.banner{background:#111c30;border:1px solid var(--line);border-left:3px solid var(--purple);padding:10px 13px;font-size:11px;color:#b8c6e0;margin-bottom:12px;line-height:1.5}.banner b{color:#fff}
+.fbar{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.brand{font-weight:700;font-size:15px;color:#fff;letter-spacing:.5px}.brand span{color:var(--purple)}
+.fbar h1{font-size:14px;margin:0;flex:1;color:#fff}
+.seg{display:flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.seg button{font:inherit;font-size:10px;background:var(--card);color:var(--mute);border:none;padding:6px 11px;cursor:pointer;border-right:1px solid var(--line)}.seg button:last-child{border-right:none}.seg button.on{background:var(--purple);color:#fff;font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px}
+@media(max-width:820px){.kpis{grid-template-columns:repeat(3,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.kpi .l{font-size:8px;text-transform:uppercase;color:var(--mute);letter-spacing:.04em}
+.kpi .v{font-family:"IBM Plex Mono",monospace;font-size:17px;font-weight:600;margin-top:3px}
+.kpi .d{font-size:10px;font-weight:600;margin-top:1px}.kpi .d.up{color:var(--g4)}.kpi .d.dn{color:var(--red)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+@media(max-width:820px){.row2{grid-template-columns:1fr}}
+.pan{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin-bottom:12px}
+.pan.pos{border-top:2px solid var(--g4)}.pan.neg{border-top:2px solid var(--red)}
+.pan h2{font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin:0 0 9px;font-weight:700;color:#fff}
+.pan.pos h2{color:var(--g4)}.pan.neg h2{color:var(--red)}
+.drv{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}.drv:last-child{border-bottom:none}
+.ic{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.ic.game{background:#2a2350}.ic.market{background:#123047}.ic.op{background:#3a2a12}
+.drv .nm{flex:1;font-size:12px}.drv .nm .t{font-size:8.5px;color:var(--mute);text-transform:uppercase}
+.drv .pct{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600}.drv .pct.up{color:var(--g4)}.drv .pct.dn{color:var(--red)}
+.spark{width:64px;height:22px;flex-shrink:0}
+.leg{font-size:10px;color:var(--mute);margin-bottom:6px}.leg i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin:0 4px 0 10px}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{background:#1b2a46;color:#cdd8ec;font-size:8.5px;text-transform:uppercase;text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+th.r,td.r{text-align:right;font-family:"IBM Plex Mono",monospace}
+td{padding:6px 10px;border-bottom:1px solid var(--line)}
+tr.mkt{cursor:pointer}tr.mkt:hover td{background:#1b2a46}
+tr.op td{background:#111c30;font-size:10.5px;color:var(--mute)}
+.rg{font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.rg.ex{background:#12351f;color:#3ddc84}.rg.gr{background:#123020;color:#5fce8f}.rg.st{background:#26375a;color:#b8c6e0}.rg.wa{background:#3a3112;color:#ffce54}.rg.hr{background:#3a1420;color:#ff5470}
+.note{font-size:10px;color:var(--mute);margin-top:10px}
+</style></head><body><div class="wrap">
+<div class="banner"><b>Management Report — v4 (mockup).</b> Exec pogled: KPI · <b>top pozitivni/negativni drivers</b> · <b>GGR trend</b> (vs prošla god.) · <b>Risk &amp; Growth</b> po tržištima (klik = drill po operateru) · <b>Market overview</b>. Bez pisanih „key takeaways". Podaci uzorak.</div>
+<div class="fbar"><span class="brand">f<span>a</span>zi</span><h1>Management Report</h1>
+  <div class="seg" id="per"><button data-p="MTD" class="on">MTD</button><button data-p="QTD">QTD</button><button data-p="YTD">YTD</button></div>
+</div>
+<div class="kpis" id="kpis"></div>
+<div class="row2">
+  <div class="pan pos" style="margin-bottom:0"><h2>▲ Top positive drivers</h2><div id="pos"></div></div>
+  <div class="pan neg" style="margin-bottom:0"><h2>▼ Top negative drivers</h2><div id="neg"></div></div>
+</div>
+<div class="pan"><h2>GGR trend — 12 meseci</h2><div class="leg"><i style="background:#a78bfa"></i>GGR (ova god.)<i style="background:#8fa0bd;border-top:2px dashed #8fa0bd;height:0"></i>GGR (prošla god.)</div><svg id="trend" viewBox="0 0 1000 200" preserveAspectRatio="none" style="width:100%;height:180px"></svg></div>
+<div class="pan"><h2>Risk &amp; Growth — tržišta (klik za drill po operateru)</h2><table><thead><tr><th>Tržište</th><th>Status</th><th class="r">GGR</th><th class="r">GGR MoM</th><th class="r">Igrači MoM</th></tr></thead><tbody id="mkt"></tbody></table></div>
+<div class="pan"><h2>Market overview</h2><table><thead><tr><th>Tržište</th><th class="r"># igara</th><th class="r">Total Bet</th><th class="r">GGR</th><th class="r">Promo</th><th class="r">Invoice</th></tr></thead><tbody id="mov"></tbody></table></div>
+<div class="note" id="note"></div>
+
+<script>
+function seeded(s){return()=>{s=(s*9301+49297)%233280;return s/233280;}}
+function fmtE(x){return "€"+(x>=1e6?(x/1e6).toFixed(2)+"M":x>=1e3?(x/1e3).toFixed(0)+"k":Math.round(x));}
+function pctS(x){return (x>=0?"+":"")+x.toFixed(0)+"%";}
+function hashStr(s){let h=5;for(const c of s)h=(h*31+c.charCodeAt(0))%99991;return h;}
+const PF={MTD:1,QTD:3.05,YTD:11.7};
+const GAMES=["Wild Hot 40","Golden Crown","Very Hot 5 Extreme","Book of Spells 2","Star Heat 40","Fruit Lock 7"];
+const MKT=["Rumunija","Srbija","Brazil","Nemačka","Nigerija","Italija","Turska"];
+const OPS=["Betking","Mozzart","GameKong","1xBet","Soccerbet","BongoBongo"];
+let period="MTD";
+const el=id=>document.getElementById(id);
+function status(g,p){if(g>10&&p>0)return["EXCELLENT","ex"];if(g>5)return["GROWTH","gr"];if(g<-10)return["HIGH RISK","hr"];if(g<-3)return["WATCH","wa"];return["STABLE","st"];}
+function spark(v0,color){const W=64,H=22,pad=2;const a=[];let cur=50;const r=seeded(Math.round(Math.abs(v0)*100)+7);for(let i=0;i<8;i++){cur+=(v0>=0?1:-1)*(2+r()*6);a.push(cur);}const mn=Math.min(...a),mx=Math.max(...a);const pts=a.map((v,i)=>`${(i/7*(W-2*pad)+pad).toFixed(1)},${(H-pad-((v-mn)/((mx-mn)||1))*(H-2*pad)).toFixed(1)}`).join(" ");return `<svg class="spark" viewBox="0 0 ${W} ${H}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5"/></svg>`;}
+function tlabel(t){return t==="game"?"Igra":t==="market"?"Tržište":"Operater";}
+function markets(){const f=PF[period];return MKT.map((m,i)=>{const rr=seeded(100+i+Math.round(f*7));const ggr=(2.5+rr()*9)*1e6*f;const gg=Math.round((rr()-0.42)*36);const pg=Math.round((rr()-0.46)*30);const games=6+Math.floor(rr()*40);const bet=ggr*28;const promo=ggr*(0.08+rr()*0.06);const inv=ggr*(0.065+rr()*0.01);return {m,ggr,gg,pg,games,bet,promo,inv};});}
+function render(){
+ el("per").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.p===period));
+ const f=PF[period], r=seeded(9+Math.round(f*11));
+ const mkts=markets();const ggr=mkts.reduce((s,m)=>s+m.ggr,0);
+ const kpi=[["Total GGR",fmtE(ggr),Math.round((r()-0.35)*22)],["Total Bet",fmtE(ggr*28),Math.round((r()-0.4)*16)],["Active Players",Math.round(ggr/115).toLocaleString("de-DE"),Math.round((r()-0.45)*14)],["Rounds",fmtE(ggr*24).replace("€",""),Math.round((r()-0.45)*13)],["Avg Bet","€"+(0.55+r()*0.3).toFixed(2),Math.round((r()-0.55)*8)],["RTP",(94.5+r()*2).toFixed(1)+"%",Math.round((r()-0.5)*2)]];
+ el("kpis").innerHTML=kpi.map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="d ${k[2]>=0?'up':'dn'}">${k[2]>=0?'▲':'▼'} ${pctS(k[2])} MoM</div></div>`).join("");
+ // drivers
+ const rr=seeded(50+Math.round(f*7));const pool=[];
+ GAMES.forEach(g=>pool.push({type:"game",nm:g,metric:"GGR MoM",v:Math.round((rr()-0.5)*70)}));
+ MKT.forEach(m=>pool.push({type:"market",nm:m,metric:"GGR MoM",v:Math.round((rr()-0.5)*60)}));
+ OPS.forEach(o=>pool.push({type:"op",nm:o,metric:rr()<0.5?"GGR MoM":"Igrači MoM",v:Math.round((rr()-0.5)*55)}));
+ const pos=pool.filter(p=>p.v>0).sort((a,b)=>b.v-a.v).slice(0,5), neg=pool.filter(p=>p.v<0).sort((a,b)=>a.v-b.v).slice(0,5);
+ const rowHtml=(p,cls)=>`<div class="drv"><div class="ic ${p.type}">${p.type==="game"?"🎮":p.type==="market"?"🌍":"🏢"}</div><div class="nm">${p.nm}<div class="t">${tlabel(p.type)} · ${p.metric}</div></div>${spark(p.v,cls==="up"?"#3ddc84":"#ff5470")}<div class="pct ${cls}">${pctS(p.v)}</div></div>`;
+ el("pos").innerHTML=pos.map(p=>rowHtml(p,"up")).join("");el("neg").innerHTML=neg.map(p=>rowHtml(p,"dn")).join("");
+ // trend
+ const months=["Jul","Avg","Sep","Okt","Nov","Dec","Jan","Feb","Mar","Apr","Maj","Jun"];const rt=seeded(321);const ly=[],cy=[];let a=380,b=430;
+ for(let i=0;i<12;i++){a+=(rt()-0.42)*60;b+=(rt()-0.38)*70;ly.push(Math.max(250,a));cy.push(Math.max(280,b));}
+ const W=1000,H=200,pad=24;const all=ly.concat(cy);const mn=Math.min(...all)*0.9,mx=Math.max(...all)*1.05;
+ const X=i=>pad+i*((W-2*pad)/11),Y=v=>H-pad-((v-mn)/(mx-mn))*(H-2*pad);
+ const ln=arr=>arr.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+ let svg=`<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#26375a"/><polyline points="${ln(ly)}" fill="none" stroke="#8fa0bd" stroke-width="2" stroke-dasharray="5,4" opacity="0.8"/><polyline points="${ln(cy)}" fill="none" stroke="#a78bfa" stroke-width="2.5"/>`;
+ cy.forEach((v,i)=>svg+=`<circle cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3" fill="#a78bfa"/>`);
+ months.forEach((m,i)=>svg+=`<text x="${X(i).toFixed(1)}" y="${H-6}" font-size="10" fill="#8fa0bd" text-anchor="middle">${m}</text>`);
+ el("trend").innerHTML=svg;
+ // Risk & Growth
+ el("mkt").innerHTML=[...mkts].sort((a,b)=>b.ggr-a.ggr).map((m,i)=>{const[st,cl]=status(m.gg,m.pg);return `<tr class="mkt" data-m="${m.m}"><td>${m.m}</td><td><span class="rg ${cl}">${st}</span></td><td class="r">${fmtE(m.ggr)}</td><td class="r" style="color:${m.gg>=0?'#3ddc84':'#ff5470'}">${pctS(m.gg)}</td><td class="r" style="color:${m.pg>=0?'#3ddc84':'#ff5470'}">${pctS(m.pg)}</td></tr>`;}).join("");
+ el("mkt").querySelectorAll("tr.mkt").forEach(tr=>tr.onclick=()=>{const nx=tr.nextElementSibling;if(nx&&nx.classList.contains("op")){let n=nx;while(n&&n.classList.contains("op")){const t=n.nextElementSibling;n.remove();n=t;}return;}
+   const r2=seeded(hashStr(tr.dataset.m));const rows=OPS.slice(0,4).map(c=>{const gg=Math.round((r2()-0.45)*44);const[st,cl]=status(gg,gg);return `<tr class="op"><td style="padding-left:24px">↳ ${c}</td><td><span class="rg ${cl}">${st}</span></td><td class="r">${fmtE((0.4+r2()*2.4)*1e6*PF[period])}</td><td class="r" style="color:${gg>=0?'#3ddc84':'#ff5470'}">${pctS(gg)}</td><td class="r">—</td></tr>`;}).join("");tr.insertAdjacentHTML("afterend",rows);});
+ // Market overview
+ el("mov").innerHTML=[...mkts].sort((a,b)=>b.ggr-a.ggr).map(m=>`<tr><td>${m.m}</td><td class="r">${m.games}</td><td class="r">${fmtE(m.bet)}</td><td class="r">${fmtE(m.ggr)}</td><td class="r">${fmtE(m.promo)}</td><td class="r">${fmtE(m.inv)}</td></tr>`).join("");
+ el("note").textContent="Period: "+period+". Drivers = najveći pokretači gore/dole (mešano igra/tržište/operater). GGR trend: puna=ova god., isprekidana=prošla (LY). Risk & Growth i Market overview po tržištu (klik na tržište → operateri).";
+}
+el("per").querySelectorAll("button").forEach(b=>b.onclick=()=>{period=b.dataset.p;render();});
+render();
+</script>
+</div></body></html>
